@@ -51,17 +51,20 @@ docker run --gpus all \
 
 Running on AMD MI355X GPUs using the vLLM ROCm image. The `VLLM_ROCM_USE_AITER=1` environment variable enables the AITER backend for optimized performance.
 
-**TP=2 or TP=4 (no expert parallelism):**
+**TP=2 or TP=4**
 
 ```bash
 docker run --gpus all \
   -p 8000:8000 \
   --ipc=host \
   -e VLLM_ROCM_USE_AITER=1 \
+  -e VLLM_ROCM_QUICK_REDUCE_QUANTIZATION=INT4 \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai-rocm:latest MiniMaxAI/MiniMax-M2.5 \
       --tensor-parallel-size 4 \
       --block-size 32 \
+      --attention-backend "ROCM_AITER_FA" \
+      --kv-cache-dtype fp8 \
       --trust-remote-code
 ```
 
@@ -72,11 +75,14 @@ docker run --gpus all \
   -p 8000:8000 \
   --ipc=host \
   -e VLLM_ROCM_USE_AITER=1 \
+  -e VLLM_ROCM_QUICK_REDUCE_QUANTIZATION=INT4 \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   vllm/vllm-openai-rocm:latest MiniMaxAI/MiniMax-M2.5 \
       --tensor-parallel-size 8 \
       --enable-expert-parallel \
       --block-size 32 \
+      --attention-backend "ROCM_AITER_FA" \
+      --kv-cache-dtype fp8 \
       --trust-remote-code
 ```
 
