@@ -63,8 +63,11 @@ docker run --gpus all \
   vllm/vllm-openai-rocm:latest MiniMaxAI/MiniMax-M2.5 \
       --tensor-parallel-size 4 \
       --block-size 32 \
-      --attention-backend "ROCM_AITER_FA" \
-      --kv-cache-dtype fp8 \
+      --tensor-parallel-size 4 \
+      --block-size 32 \
+      --tool-call-parser minimax_m2 \
+      --reasoning-parser minimax_m2_append_think \
+      --enable-auto-tool-choice \
       --trust-remote-code
 ```
 
